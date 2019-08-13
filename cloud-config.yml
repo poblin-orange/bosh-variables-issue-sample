@@ -21,7 +21,7 @@ networks:
   - azs:
     - z1
     cloud_properties:
-      net_id: ((/tests/my-net-id)) #credhub hosted  az value
+      net_id: ((/tests/my-net-id)) #credhub hosted openstack network id 
       security_groups:
       - tf-default-sg
     gateway: 192.168.250.1
