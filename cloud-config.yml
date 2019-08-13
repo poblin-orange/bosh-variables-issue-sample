@@ -6,9 +6,9 @@ azs:
 
 compilation:
   az: z1
-  network: compilation
+  network: my-network
   reuse_compilation_vms: true
-  vm_type: large
+  vm_type: default
   workers: 5
   
 disk_types:
