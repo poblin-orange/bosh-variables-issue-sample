@@ -1,2 +1,39 @@
 ---
+azs:
+- name: z1
+  cloud_properties:
+    availability_zone: ((/tests/my-az)) #credhub hosted  az value
 
+compilation:
+  az: z1
+  network: compilation
+  reuse_compilation_vms: true
+  vm_type: large
+  workers: 5
+  
+disk_types:
+- disk_size: 3000
+  name: small
+
+networks:
+- name: my-network
+  subnets:
+  - azs:
+    - z1
+    cloud_properties:
+      net_id: ((/tests/my-net-id)) #credhub hosted  az value
+      security_groups:
+      - tf-default-sg
+    gateway: 192.168.211.1
+    range: 192.168.211.0/24
+    reserved:
+    - 192.168.211.1 - 192.168.211.20
+    static:
+    - 192.168.211.250 - 192.168.211.254
+  type: manual
+
+vm_types:
+- name: default
+  cloud_properties:
+    instance_type: s3.medium.4
+  
