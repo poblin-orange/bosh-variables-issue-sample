@@ -1,2 +1,51 @@
 ---
+name: dns-recursor
 
+releases:
+- {name: nginx, version: latest}
+
+stemcells:
+- alias: default
+  os: ubuntu-xenial
+  version: latest
+
+update:
+  canaries: 0
+  canary_watch_time: 30000-1200000
+  update_watch_time:  30000-1200000
+  max_in_flight: 32
+  serial: true
+
+instance_groups:
+- name: nginx
+  azs: [z1]
+  instances: 1
+  vm_type: default
+  stemcell: default
+
+  networks:
+  - name: my-network
+    default: [dns,gateway]
+
+  jobs:
+  - name: nginx
+    release: nginx
+    properties:
+      nginx_conf: |
+        user nobody vcap;
+        worker_processes  1;
+        error_log /var/vcap/sys/log/nginx/error.log   info;
+        events {
+          worker_connections  1024;
+        }
+        http {
+          include /var/vcap/packages/nginx/conf/mime.types;
+          server {
+            server_name _; # invalid value which will never trigger on a real hostname.
+            listen *:80;
+            access_log /var/vcap/sys/log/nginx/example.com-access.log;
+            error_log /var/vcap/sys/log/nginx/example.com-error.log;
+            root /var/vcap/data/nginx/document_root;
+            index index.shtml;
+          }
+    
